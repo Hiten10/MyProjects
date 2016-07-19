@@ -1,0 +1,58 @@
+﻿@model MvcUnityGenericRepositryDIUow.Models.Student
+
+@{
+    ViewBag.Title = "Student";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Student</h2>
+
+<fieldset>
+    <legend>Student</legend>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.Name)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Name)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.Email)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Email)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.Class)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Class)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.EnrollYear)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.EnrollYear)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.City)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.City)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.Country)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Country)
+    </div>
+</fieldset>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id=Model.StudentID }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

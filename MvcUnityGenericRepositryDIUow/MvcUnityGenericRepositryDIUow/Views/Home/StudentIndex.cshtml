@@ -1,0 +1,169 @@
+﻿@{
+    ViewBag.Title = "StudentIndex";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>StudentIndex</h2>
+<div>
+    <table>
+        <tr>
+            <td><button onclick="GetStudents();return false;">Get All Students</button></td>
+            <td>Enter Student Id: <input type="text" id="txtStudentID" style="width:50PX" /></td>
+            <td><button onclick="GetStudent();return false;">Get Student</button></td>
+            <td>
+                <table>
+                    <tr><td>Student ID:</td><td><input type="text" id="txtSID" /></td></tr>
+                    <tr>  <td>Name:</td><td><input type="text" id="txtName" /></td></tr>
+                    <tr> <td>Email:</td><td><input type="text" id="txtEmail" /></td></tr>
+                    <tr><td>Class:</td><td><input type="text" id="txtClass" /></td></tr>
+                    <tr><td>Enrollment Year:</td><td><input type="text" id="txtEnrollYear" /></td></tr>
+                    <tr><td>City:</td><td><input type="text" id="txtCity" /></td></tr>
+                    <tr><td>Country:</td><td><input type="text" id="txtCountry" /></td></tr>
+                </table>
+            </td>
+            <td><button onclick="AddStudent();return false;">Add Student</button></td>
+            <td>Delete Student <input type="text" id="txtStudent" style="width:50PX" /></td>
+            <td><button onclick="DeleteStudent(); return false;">Delete Student</button></td>
+        </tr>
+    </table>
+
+</div>
+
+<h3>Oputput of action done through WEB API:</h3>
+<ol class="round">
+    <li>
+        <div id="divResult"></div>
+
+    </li>
+</ol>
+
+@Scripts.Render("~/bundles/jquery")
+<script type="text/javascript">
+    var apiUrl = 'http://localhost:53006/api/value';
+    function GetStudents() {
+        jQuery.support.cors = true;
+        $.ajax({
+            url: apiUrl,
+            type: 'GET',
+            dataType: 'json',
+            success: function (data) {
+                WriteResponse(data);
+            },
+            error: function (x, y, z) {
+                alert(x + '\n' + y + '\n' + z);
+            }
+        });
+    }
+
+    function AddStudent() {
+        jQuery.support.cors = true;
+        var student = {
+            StudentID: $('#txtSID').val(),
+            Name: $('#txtName').val(),
+            Email: $('#txtEmail').val(),
+            EnrollYear: $('#txtEnrollYear').val(),
+            City: $("#txtCity").val(),
+            Country: $("#txtCountry").val(),
+            Class: $("#txtClass").val()
+        };
+
+        $.ajax({
+            url: apiUrl,
+            type: 'POST',
+            data: JSON.stringify(student),
+            contentType: "application/json;charset=utf-8",
+            success: function (data) {
+                WriteResponse(data);
+            },
+            error: function (x, y, z) {
+                alert(x + '\n' + y + '\n' + z);
+            }
+        });
+    }
+
+    function DeleteStudent() {
+        jQuery.support.cors = true;
+        var id = $('#txtStudent').val()
+
+        $.ajax({
+            url: apiUrl +'/' + id,
+            type: 'DELETE',
+            contentType: "application/json;charset=utf-8",
+            success: function (data) {
+                WriteResponse(data);
+            },
+            error: function (x, y, z) {
+                alert(x + '\n' + y + '\n' + z);
+            }
+        });
+    }
+
+    function WriteResponse(students) {
+        var strResult = "<table><th>Student ID</th><th>Name</th><th>Email</th><th>Enrollment Year</th><th>Class</th><th>City</th><th>Country</th>";
+        $.each(students, function (index, student) {
+            strResult += "<tr><td>" + student.StudentID + "</td><td> " + student.Name + "</td><td>" + student.Email + "</td><td>" + student.EnrollYear + "</td><td>" + student.Class + "</td><td>" + student.City + "</td><td>" + student.Country + "</td></tr>";
+        });
+        strResult += "</table>";
+        $("#divResult").html(strResult);
+    }
+
+    function ShowStudent(student) {
+        if (student != null) {
+            var strResult = "<table><th>Student ID</th><th>Name</th><th>Email</th><th>Enrollment Year</th><th>Class</th><th>City</th><th>Country</th>";
+            strResult += "<tr><td>" + student.StudentID + "</td><td> " + student.Name + "</td><td>" + student.Email + "</td><td>" + student.EnrollYear + "</td><td>" + student.Class + "</td><td>" + student.City + "</td><td>" + student.Country + "</td></tr>";
+            strResult += "</table>";
+            $("#divResult").html(strResult);
+        }
+        else {
+            $("#divResult").html("No Results To Display");
+        }
+    }
+
+    function GetStudent() {
+        jQuery.support.cors = true;
+        var id = $('#txtStudentID').val();
+        var path = apiUrl + '/' + id;
+        $.ajax({
+            url: path,
+            type: 'GET',
+            dataType: 'json',
+            success: function (data) {
+                ShowStudent(data);
+            },
+            error: function (x, y, z) {
+                alert(x + '\n' + y + '\n' + z);
+            }
+        });
+    }
+
+    $(document).ready(function () {        
+        $("#txtSID").blur(function () {
+            var path = apiUrl + '/' + this.value;
+            $.ajax({
+                url: path,
+                type: 'GET',
+                dataType: 'json',
+                success: function (data) {
+                    BindData(data);
+                },
+                error: function (x, y, z) {
+                    alert(x + '\n' + y + '\n' + z);
+                }
+            });
+        });
+    });
+
+    function BindData(student)
+    {
+        if(student)
+        {
+            $('#txtSID').val(student.StudentID);
+            $('#txtName').val(student.Name);
+            $('#txtEmail').val(student.Email);
+            $('#txtEnrollYear').val(student.EnrollYear);
+            $("#txtCity").val(student.City);
+            $("#txtCountry").val(student.Country);
+            $("#txtClass").val(student.Class);
+        }
+    }
+</script>
